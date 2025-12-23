@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ano5</title>
+<link rel="icon" type="image/png" href="ano5.png">
+<style>
+:root{
+  --bg:linear-gradient(to bottom, #000e19 0%, #010306 55%);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#6b8cff;
+  --ok:#22c55e;
+  --bad:#ef4444;
+  --nav-h:76px;
+  --nav-max:1100px;
+  --card-h:160px;
+  --card-radius:12px;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+html,body{margin:0;height:100%;background:var(--bg);background-attachment:fixed;background-position:center;background-repeat:no-repeat;background-size:cover;color:var(--text);-webkit-font-smoothing:antialiased}
+body{opacity:0;animation:fadeIn .35s ease forwards}
+@keyframes fadeIn{to{opacity:1}}
+.gate{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1000;
+}
+.gate .box{text-align:center}
+.logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:14px;font-weight:700;font-size:30px}
+.logo img{width:36px;height:36px}
+.gate input{
+  width:300px;max-width:86vw;padding:12px;border:0;border-bottom:2px solid rgba(255,255,255,0.06);
+  background:transparent;color:var(--text);font-size:15px;text-align:center;outline:none;transition:box-shadow .18s, border-color .18s;
+}
+.gate input:focus{box-shadow:0 10px 40px -18px rgba(107,140,255,.35);border-color:var(--accent)}
+.gate input.good{border-color:var(--ok)}
+.gate input.bad{border-color:var(--bad)}
+.nav-wrap{
+  position:fixed;
+  left:50%;
+  top:14px;
+  transform:translateX(-50%) translateY(0);
+  width:40%;
+  max-width:var(--nav-max);
+  padding:10px 18px;
+  z-index:900;
+  transition:transform .22s cubic-bezier(.2,.9,.2,1), opacity .16s ease;
+  pointer-events:auto;
+}
+.nav-wrap.hidden{transform:translateX(-50%) translateY(calc(-1 * (var(--nav-h) + 36px))); opacity:0;pointer-events:none}
+.nav-bg{
+  position:absolute;inset:0;border-radius:999px;background:rgba(5,5,5,0.8);
+  border:1px solid rgba(255,255,255,0.02);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  z-index:0;
+  box-shadow:0 14px 40px rgba(0,0,0,0.55);
+}
+.nav{
+  position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:0 12px;
+}
+.nav-left{display:flex;align-items:center;gap:12px}
+.nav-title{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:1px}
+.nav-title img{width:22px;height:22px}
+.nav-right{display:flex;gap:8px}
+.nav-btn{background:transparent;border:0;color:var(--text);padding:8px 12px;border-radius:999px;font-weight:600;cursor:pointer}
+.nav-btn:hover{background:rgba(255,255,255,0.06)}
+.site{display:none;padding-top:calc(var(--nav-h) + 28px);min-height:100vh;opacity:0;transform:translateY(10px)}
+.site.show{display:block;animation:siteIn .36s ease forwards}
+@keyframes siteIn{to{opacity:1;transform:none}}
+main{max-width:1200px;margin:0 auto;padding:12px}
+.section{margin:44px 8px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.section-header h2{margin:0;font-size:18px;font-weight:700}
+.section-header small{color:var(--muted);font-weight:600}
+.section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.card{
+  position:relative;height:var(--card-h);border-radius:var(--card-radius);overflow:hidden;
+  border:1px solid rgba(255,255,255,0.03);background:#06060a;box-shadow:0 6px 26px rgba(0,0,0,0.55);transition:transform .18s ease, box-shadow .18s; cursor:pointer;
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 22px 64px rgba(0,0,0,0.65)}
+.card-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center center;background-repeat:no-repeat;filter:contrast(.98) saturate(.95);
+}
+.card-overlay{
+  position:absolute;left:0;right:0;bottom:0;height:72px;padding:12px 14px;
+  background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.75) 100%);
+  display:flex;align-items:flex-end;
+}
+.card-title{margin:0;font-weight:700;font-size:15px;color:var(--text);user-select:none;}
+.card-meta{font-size:12px;color:var(--muted);margin-top:6px;user-select:none;}
+@media (max-width:640px){
+  :root{--nav-h:64px;--card-h:180px}
+  .nav-wrap{top:10px;padding:8px}
+  .nav-right .nav-btn{padding:7px 10px}
+  .section{margin:28px 6px}
+  .section-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+}
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+  <div class="box">
+    <div class="logo"><img src="ano5.png" alt="logo">Ano5</div>
+    <input id="pw" type="password" placeholder="enter password" autocomplete="current-password" />
+  </div>
+</div>
+<div class="nav-wrap hidden" id="navWrap" aria-hidden="true">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <div class="nav" role="navigation" aria-label="Main">
+    <div class="nav-left">
+      <div class="nav-title"><img src="ano5.png" alt="">Ano5</div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn">Games</button>
+      <button class="nav-btn">Upload</button>
+      <button class="nav-btn">About</button>
+    </div>
+  </div>
+</div>
+<div class="site" id="site">
+  <main>
+    <section class="section" id="racing">
+      <div class="section-header"><h2>Games</h2><small>subtitle</small></div>
+      <div class="section-grid">
+	  
+	  
+	  
+	  
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/crazycattle3d.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Crazy Cattle 3D</div>
+      <div class="card-meta">by Anna Mayberry</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/slope.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Slope</div>
+      <div class="card-meta">by Rob Kay</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/retrohighway.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Retro Highway</div>
+      <div class="card-meta">by Nintendo</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/superstarcar.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Super Star Car</div>
+      <div class="card-meta">by Barnzmu</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/blockblast.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Block Blast</div>
+      <div class="card-meta">by Hungry Studio</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/drifthunters.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Drift Hunters</div>
+      <div class="card-meta">by Ilya Kaminetsky</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/snowrider3d.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Snow Rider 3D</div>
+      <div class="card-meta">by Ashima Prabhakar</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/cookieclicker.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Cookie Clicker</div>
+      <div class="card-meta">by Orteil</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/retrobowl.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Retrobowl</div>
+      <div class="card-meta">by New Star Games</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/monkeymart.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Monkey Mart</div>
+      <div class="card-meta">by TinyDobbins</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/supermario64.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Super Mario 64</div>
+      <div class="card-meta">by Nintendo</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-bg" style="
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+      url('img/games/eaglercraft152.png');
+  "></div>
+  <div class="card-overlay">
+    <div>
+      <div class="card-title">Eaglercraft 1.5.2</div>
+      <div class="card-meta">by LAX1DUDE</div>
+    </div>
+  </div>
+</div>
+
+
+
+
+      </div>
+    </section>
+    <div style="height:160px"></div>
+  </main>
+</div>
+<script>
+const HASH = 'MQaTottOIh917Z/8XleF/IYAHvhSTc8i8V+/m7YEU3c=';
+const pw = document.getElementById('pw');
+const gate = document.getElementById('gate');
+const site = document.getElementById('site');
+const navWrap = document.getElementById('navWrap');
+async function sha256b64(str){
+  const buf = new TextEncoder().encode(str);
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return btoa(String.fromCharCode(...new Uint8Array(h)));
+}
+async function tryUnlock(){
+  pw.classList.remove('bad','good');
+  const val = pw.value || '';
+  const h = await sha256b64(val);
+  if(h === HASH){
+    pw.classList.add('good');
+    setTimeout(()=>{
+      gate.style.display='none';
+      site.classList.add('show');
+      navWrap.classList.remove('hidden');
+      navWrap.setAttribute('aria-hidden','false');
+    },1000);
+  }else{
+    pw.classList.add('bad');
+    pw.value='';
+    setTimeout(()=>pw.classList.remove('bad'),1000);
+  }
+}
+pw.addEventListener('keydown', e => { if(e.key==='Enter') tryUnlock(); });
+pw.focus();
+(function(){
+  let lastY = window.scrollY || 0;
+  let raf = false;
+  const THRESH = 6;
+  function tick(){
+    const y = window.scrollY || 0;
+    const delta = y - lastY;
+    if(delta > THRESH){
+      navWrap.classList.add('hidden');
+    } else if(delta < 0){
+      navWrap.classList.remove('hidden');
+    }
+    if(y < 20) navWrap.classList.remove('hidden');
+    lastY = y;
+    raf = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if(!raf){ raf = true; requestAnimationFrame(tick); }
+  }, {passive:true});
+})();
+</script>
+</body>
+</html>
