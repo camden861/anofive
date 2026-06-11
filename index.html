@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Ano5</title>
 <link rel="icon" type="image/png" href="ano5.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 <style>
 :root{
   --bg:linear-gradient(to bottom, #000e19 0%, #010306 55%);
@@ -19,22 +20,46 @@
   --card-radius:12px;
 }
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-html,body{margin:0;height:100%;background:var(--bg);background-attachment:fixed;background-position:center;background-repeat:no-repeat;background-size:cover;color:var(--text);-webkit-font-smoothing:antialiased}
-body{opacity:0;animation:fadeIn .35s ease forwards}
+html,body{
+  margin:0;
+  height:100%;
+  background:var(--bg);
+  background-attachment:fixed;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:cover;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased
+}
+body{
+  opacity:0;
+  animation:fadeIn .35s ease forwards;
+  overflow-x:hidden;
+}
+body.play-mode{overflow:hidden}
 @keyframes fadeIn{to{opacity:1}}
+
 .gate{
   position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1000;
 }
 .gate .box{text-align:center}
-.logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:14px;font-weight:700;font-size:30px}
+.logo{
+  display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:14px;
+  font-weight:700;font-size:30px
+}
 .logo img{width:36px;height:36px}
 .gate input{
   width:300px;max-width:86vw;padding:12px;border:0;border-bottom:2px solid rgba(255,255,255,0.06);
-  background:transparent;color:var(--text);font-size:15px;text-align:center;outline:none;transition:box-shadow .18s, border-color .18s;
+  background:transparent;color:var(--text);font-size:15px;text-align:center;outline:none;
+  transition:box-shadow .18s, border-color .18s;
 }
-.gate input:focus{box-shadow:0 10px 40px -18px rgba(107,140,255,.35);border-color:var(--accent)}
+.gate input:focus{
+  box-shadow:0 10px 40px -18px rgba(107,140,255,.35);
+  border-color:var(--accent)
+}
 .gate input.good{border-color:var(--ok)}
 .gate input.bad{border-color:var(--bad)}
+
 .nav-wrap{
   position:fixed;
   left:50%;
@@ -47,7 +72,11 @@ body{opacity:0;animation:fadeIn .35s ease forwards}
   transition:transform .22s cubic-bezier(.2,.9,.2,1), opacity .16s ease;
   pointer-events:auto;
 }
-.nav-wrap.hidden{transform:translateX(-50%) translateY(calc(-1 * (var(--nav-h) + 36px))); opacity:0;pointer-events:none}
+.nav-wrap.hidden{
+  transform:translateX(-50%) translateY(calc(-1 * (var(--nav-h) + 36px)));
+  opacity:0;
+  pointer-events:none
+}
 .nav-bg{
   position:absolute;inset:0;border-radius:999px;background:rgba(5,5,5,0.8);
   border:1px solid rgba(255,255,255,0.02);
@@ -62,38 +91,449 @@ body{opacity:0;animation:fadeIn .35s ease forwards}
 .nav-title{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:1px}
 .nav-title img{width:22px;height:22px}
 .nav-right{display:flex;gap:8px}
-.nav-btn{background:transparent;border:0;color:var(--text);padding:8px 12px;border-radius:999px;font-weight:600;cursor:pointer}
+.nav-btn{
+  background:transparent;
+  border:0;
+  color:var(--text);
+  padding:8px 12px;
+  border-radius:999px;
+  font-weight:600;
+  cursor:pointer
+}
 .nav-btn:hover{background:rgba(255,255,255,0.06)}
-.site{display:none;padding-top:calc(var(--nav-h) + 28px);min-height:100vh;opacity:0;transform:translateY(10px)}
+
+.site{
+  display:none;
+  padding-top:calc(var(--nav-h) + 28px);
+  min-height:100vh;
+  opacity:0;
+  transform:translateY(10px)
+}
 .site.show{display:block;animation:siteIn .36s ease forwards}
 @keyframes siteIn{to{opacity:1;transform:none}}
+
 main{max-width:1200px;margin:0 auto;padding:12px}
-.section{margin:44px 8px}
-.section-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.section-header h2{margin:0;font-size:18px;font-weight:700}
-.section-header small{color:var(--muted);font-weight:600}
-.section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-.card{
-  position:relative;height:var(--card-h);border-radius:var(--card-radius);overflow:hidden;
-  border:1px solid rgba(255,255,255,0.03);background:#06060a;box-shadow:0 6px 26px rgba(0,0,0,0.55);transition:transform .18s ease, box-shadow .18s; cursor:pointer;
+.section{margin:38px 8px}
+
+.games-tags{
+  display:flex;
+  gap:24px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:2px 2px 10px;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  margin-bottom:14px;
+  scroll-behavior:smooth;
+  align-items:center;
+  flex-wrap:nowrap;
 }
-.card:hover{transform:translateY(-6px);box-shadow:0 22px 64px rgba(0,0,0,0.65)}
+.games-tags::-webkit-scrollbar{display:none}
+.tag-btn{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:0;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  white-space:nowrap;
+  user-select:none;
+  opacity:.82;
+  border-bottom:1px solid transparent;
+  transition:transform .18s ease, color .18s ease, opacity .18s ease;
+}
+.tag-btn:hover{
+  color:#fff;
+  opacity:1;
+}
+.tag-btn.active{
+  color:#fff;
+  opacity:1;
+  border-bottom-color:transparent;
+}
+.tag-btn:focus-visible{
+  outline:none;
+  color:#fff;
+  opacity:1;
+}
+
+.section-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+  transition:opacity .22s ease, transform .22s ease, filter .22s ease;
+}
+.section-grid.swap-out{
+  opacity:0;
+  transform:translateY(14px);
+  filter:blur(3px);
+}
+.empty-state{
+  display:none;
+  padding:26px 18px;
+  border:1px dashed rgba(255,255,255,0.10);
+  border-radius:18px;
+  color:var(--muted);
+  background:rgba(255,255,255,0.03);
+  text-align:center;
+  font-weight:600;
+}
+.empty-state.show{display:block}
+
+.card{
+  position:relative;
+  height:var(--card-h);
+  border-radius:var(--card-radius);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.03);
+  background:#06060a;
+  box-shadow:0 6px 26px rgba(0,0,0,0.55);
+  transition:transform .18s ease, box-shadow .18s, border-color .18s;
+  cursor:pointer;
+  outline:none;
+  animation:cardIn .42s ease both;
+  animation-delay:calc(var(--i, 0) * 28ms);
+}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(16px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.card:hover,.card:focus-visible{
+  transform:translateY(-6px);
+  box-shadow:0 22px 64px rgba(0,0,0,0.65);
+  border-color:rgba(255,255,255,0.07);
+}
+.card.favorited{
+  border-color:rgba(255,255,255,0.10);
+}
 .card-bg{
-  position:absolute;inset:0;background-size:cover;background-position:center center;background-repeat:no-repeat;filter:contrast(.98) saturate(.95);
+  position:absolute;inset:0;
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  filter:contrast(.98) saturate(.95);
 }
 .card-overlay{
-  position:absolute;left:0;right:0;bottom:0;height:72px;padding:12px 14px;
+  position:absolute;left:0;right:0;bottom:0;height:10px;padding:12px 14px;
   background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.75) 100%);
   display:flex;align-items:flex-end;
 }
 .card-title{margin:0;font-weight:700;font-size:15px;color:var(--text);user-select:none;}
-.card-meta{font-size:12px;color:var(--muted);margin-top:6px;user-select:none;}
+.fav-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:999px;
+  background:rgba(0,0,0,0.35);
+  color:rgba(255,255,255,0.82);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  transition:transform .16s ease, background .16s ease, color .16s ease, opacity .16s ease, box-shadow .16s ease;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0;
+}
+.card:hover .fav-btn,
+.card:focus-visible .fav-btn{
+  opacity:1;
+}
+.fav-btn:hover{
+  background:rgba(255,255,255,0.10);
+  color:#fff;
+  box-shadow:0 8px 18px rgba(0,0,0,0.25);
+}
+.card.favorited .fav-btn{
+  color:#fff;
+  background:rgba(107,140,255,0.28);
+}
+.fav-btn .material-icons{
+  font-size:20px;
+  line-height:1;
+}
+
+.play-view{
+  position:fixed;
+  inset:0;
+  z-index:980;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(12px);
+  transition:opacity .24s ease, transform .24s ease, visibility 0s linear .24s;
+  background:
+    radial-gradient(circle at top, rgba(107,140,255,.12), transparent 42%),
+    linear-gradient(to bottom, rgba(1,3,6,.94), rgba(1,3,6,.98));
+}
+.play-view.show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:none;
+  transition:opacity .24s ease, transform .24s ease, visibility 0s;
+}
+.play-panel{
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 28px 90px rgba(0,0,0,0.7);
+  display:flex;
+  flex-direction:column;
+  transform:scale(.985);
+  transition:transform .24s ease, border-radius .18s ease;
+  border-radius:0;
+}
+.play-view.show .play-panel{transform:scale(1)}
+.play-panel:fullscreen,
+.play-panel.is-fullscreen{
+  width:100vw;
+  height:100vh;
+  border-radius:0 !important;
+  transform:none !important;
+}
+.play-panel:fullscreen .play-top,
+.play-panel.is-fullscreen .play-top{
+  border-bottom-color:rgba(255,255,255,0.05);
+}
+.play-panel:fullscreen .play-stage,
+.play-panel.is-fullscreen .play-stage{
+  padding:0;
+}
+.play-panel:fullscreen .play-frame-shell,
+.play-panel.is-fullscreen .play-frame-shell,
+.play-panel:fullscreen .play-loader,
+.play-panel.is-fullscreen .play-loader{
+  border-radius:0;
+}
+
+.play-top{
+  position:relative;
+  z-index:80;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:0 10px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  background:rgba(5,5,5,0.96);
+  color:var(--text);
+  flex:0 0 auto;
+}
+.play-left{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.back-btn,.fs-btn{
+  width:24px;
+  height:24px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:background .16s ease, opacity .16s ease;
+  flex:0 0 auto;
+  opacity:.9;
+}
+.back-btn:hover,.fs-btn:hover{
+  background:rgba(255,255,255,0.08);
+  opacity:1;
+}
+.back-btn .material-icons,
+.fs-btn .material-icons{
+  font-size:16px;
+  line-height:1;
+}
+.play-title-wrap{min-width:0}
+.play-kicker{
+  font-size:7px;
+  color:var(--muted);
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:0;
+}
+.play-title{
+  font-size:10px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:min(56vw, 720px)
+}
+.play-actions{
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+
+.play-stage{
+  position:relative;
+  flex:1;
+  min-height:0;
+  padding:0;
+}
+.play-frame-shell{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border-radius:0;
+  overflow:hidden;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+.play-frame{
+  width:100%;
+  height:100%;
+  border:0;
+  display:block;
+  background:transparent;
+}
+.play-fallback{
+  position:absolute;
+  inset:0;
+  display:none;
+  place-items:center;
+  text-align:center;
+  padding:24px;
+  color:var(--muted);
+  background:transparent;
+  z-index:10;
+}
+.play-fallback.show{display:grid}
+.play-fallback strong{
+  display:block;
+  color:var(--text);
+  font-size:20px;
+  margin-bottom:8px
+}
+.play-fallback span{
+  max-width:420px;
+  line-height:1.5
+}
+.play-fallback code{
+  background:rgba(255,255,255,0.06);
+  padding:2px 6px;
+  border-radius:6px;
+  color:var(--text)
+}
+
+.play-loader{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .22s ease, visibility 0s linear .22s;
+  overflow:hidden;
+  border-radius:0;
+}
+.play-loader.show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transition:opacity .22s ease, visibility 0s;
+}
+.play-loader-bg{
+  position:absolute;
+  inset:-30px;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  filter:blur(22px) saturate(.9) contrast(.95);
+  transform:scale(1.08);
+}
+.play-loader-dim{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.play-loader-content{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  text-align:center;
+  padding:24px;
+}
+.play-spinner{
+  width:58px;
+  height:58px;
+  border-radius:999px;
+  border:4px solid rgba(255,255,255,.12);
+  border-top-color:rgba(255,255,255,.9);
+  animation:spin .8s linear infinite;
+  box-shadow:0 0 28px rgba(107,140,255,.22);
+}
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+.play-loader-title{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:.02em;
+  color:var(--text);
+}
+.play-loader-subtitle{
+  font-size:13px;
+  color:var(--muted);
+}
+
 @media (max-width:640px){
   :root{--nav-h:64px;--card-h:180px}
   .nav-wrap{top:10px;padding:8px}
   .nav-right .nav-btn{padding:7px 10px}
-  .section{margin:28px 6px}
+  .section{margin:24px 6px}
+  .games-tags{gap:18px}
   .section-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .play-panel{
+    width:100vw;
+    height:100vh;
+    border-radius:0;
+  }
+  .play-top{height:26px;padding:0 8px}
+  .play-title{max-width:54vw;font-size:11px}
+  .back-btn,.fs-btn{width:22px;height:22px}
+  .back-btn .material-icons,
+  .fs-btn .material-icons{font-size:15px}
+}
+
+.top-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 170px;
+  background: url('banner.jpg') center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 30%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
 }
 </style>
 </head>
@@ -104,6 +544,7 @@ main{max-width:1200px;margin:0 auto;padding:12px}
     <input id="pw" type="password" placeholder="enter password" autocomplete="current-password" />
   </div>
 </div>
+<div class="top-bg"></div>
 <div class="nav-wrap hidden" id="navWrap" aria-hidden="true">
   <div class="nav-bg" aria-hidden="true"></div>
   <div class="nav" role="navigation" aria-label="Main">
@@ -111,228 +552,382 @@ main{max-width:1200px;margin:0 auto;padding:12px}
       <div class="nav-title"><img src="ano5.png" alt="">Ano5</div>
     </div>
     <div class="nav-right">
-      <button class="nav-btn">Games</button>
-      <button class="nav-btn">Upload</button>
-      <button class="nav-btn">About</button>
+      <button class="nav-btn">button</button>
+      <button class="nav-btn">button</button>
+      <button class="nav-btn">button</button>
     </div>
   </div>
 </div>
+
+<div class="play-view" id="playView" aria-hidden="true">
+  <div class="play-panel" id="playPanel" role="dialog" aria-modal="true" aria-label="Game player">
+    <div class="play-top">
+      <div class="play-left">
+        <button class="back-btn" id="backBtn" aria-label="Back to games">
+          <span class="material-icons">arrow_back</span>
+        </button>
+        <div class="play-title-wrap">
+          <div class="play-kicker"></div>
+          <div class="play-title" id="playTitle"></div>
+        </div>
+      </div>
+      <div class="play-actions">
+        <button class="fs-btn" id="fsBtn" aria-label="Fullscreen">
+          <span class="material-icons">fullscreen</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="play-stage">
+      <div class="play-frame-shell" id="playShell">
+        <iframe class="play-frame" id="playFrame" allowfullscreen></iframe>
+        <div class="play-fallback" id="playFallback">
+          <div>
+          </div>
+        </div>
+
+        <div class="play-loader" id="playLoader" aria-hidden="true">
+          <div class="play-loader-bg" id="playLoaderBg"></div>
+          <div class="play-loader-dim"></div>
+          <div class="play-loader-content">
+            <div class="play-spinner"></div>
+            <div class="play-loader-title" id="playLoaderTitle">Loading...</div>
+            <div class="play-loader-subtitle">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="site" id="site">
   <main>
-    <section class="section" id="racing">
-      <div class="section-header"><h2>Games</h2><small>subtitle</small></div>
-      <div class="section-grid">
-	  
-	  
-	  
-	  
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/crazycattle3d.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Crazy Cattle 3D</div>
-      <div class="card-meta">by Anna Mayberry</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/slope.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Slope</div>
-      <div class="card-meta">by Rob Kay</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/retrohighway.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Retro Highway</div>
-      <div class="card-meta">by Nintendo</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/superstarcar.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Super Star Car</div>
-      <div class="card-meta">by Barnzmu</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/blockblast.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Block Blast</div>
-      <div class="card-meta">by Hungry Studio</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/drifthunters.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Drift Hunters</div>
-      <div class="card-meta">by Ilya Kaminetsky</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/snowrider3d.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Snow Rider 3D</div>
-      <div class="card-meta">by Ashima Prabhakar</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/cookieclicker.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Cookie Clicker</div>
-      <div class="card-meta">by Orteil</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/retrobowl.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Retrobowl</div>
-      <div class="card-meta">by New Star Games</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/monkeymart.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Monkey Mart</div>
-      <div class="card-meta">by TinyDobbins</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/supermario64.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Super Mario 64</div>
-      <div class="card-meta">by Nintendo</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-bg" style="
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
-      url('img/games/eaglercraft152.png');
-  "></div>
-  <div class="card-overlay">
-    <div>
-      <div class="card-title">Eaglercraft 1.5.2</div>
-      <div class="card-meta">by LAX1DUDE</div>
-    </div>
-  </div>
-</div>
-
-
-
-
-      </div>
+    <section class="section" id="gamesSection">
+      <div class="games-tags" id="gamesTags"></div>
+      <div class="empty-state" id="emptyState">Nothing here yet.</div>
+      <div class="section-grid" id="gameGrid"></div>
     </section>
     <div style="height:160px"></div>
   </main>
 </div>
+
 <script>
-const HASH = 'MQaTottOIh917Z/8XleF/IYAHvhSTc8i8V+/m7YEU3c=';
+const HASH = '0vjSJT4Lt0ln7jh24tvzkdX9FwsnBXP7PZLlJzhievA=';
+const LOCK_KEY = 'ano5_unlock_until';
+const FAV_KEY = 'ano5_favorites';
+
+const GAME_DATA = [
+  { title:'Crazy Cattle 3D', image:'img/games/crazycattle3d.png', category:'action', src:'games/crazycattle3d/index.html' },
+  { title:'Slope', image:'img/games/slope.png', category:'racing', src:'games/slope/index.html' },
+  { title:'Retro Highway', image:'img/games/retrohighway.png', category:'racing', src:'games/retrohighway/index.html' },
+  { title:'Super Star Car', image:'img/games/superstarcar.png', category:'racing', src:'games/superstarcar/index.html' },
+  { title:'Block Blast', image:'img/games/blockblast.png', category:'puzzle', src:'games/blockblast/index.html' },
+  { title:'Drift Hunters', image:'img/games/drifthunters.png', category:'racing', src:'games/drifthunters/index.html' },
+  { title:'Snow Rider 3D', image:'img/games/snowrider3d.png', category:'racing', src:'games/snowrider3d/index.html' },
+  { title:'Cookie Clicker', image:'img/games/cookieclicker.png', category:'idle', src:'games/cookieclicker/index.html' },
+  { title:'Retrobowl', image:'img/games/retrobowl.png', category:'sports', src:'games/retrobowl/index.html' },
+  { title:'Monkey Mart', image:'img/games/monkeymart.png', category:'idle', src:'games/monkeymart/index.html' },
+  { title:'Super Mario 64', image:'img/games/supermario64.png', category:'adventure', src:'games/supermario64/index.html' },
+  { title:'Eaglercraft 1.5.2', image:'img/games/eaglercraft.png', category:'sandbox', src:'games/eaglercraft/index.html' }
+];
+
+const TAGS = [
+  { id:'favorites', label:'Favorites' },
+  { id:'all', label:'All' },
+  { id:'racing', label:'Racing' },
+  { id:'action', label:'Action' },
+  { id:'puzzle', label:'Puzzle' },
+  { id:'idle', label:'Idle' },
+  { id:'sports', label:'Sports' },
+  { id:'sandbox', label:'Sandbox' },
+  { id:'adventure', label:'Adventure' }
+];
+
 const pw = document.getElementById('pw');
 const gate = document.getElementById('gate');
 const site = document.getElementById('site');
 const navWrap = document.getElementById('navWrap');
-async function sha256b64(str){
+const gamesTags = document.getElementById('gamesTags');
+const gameGrid = document.getElementById('gameGrid');
+const emptyState = document.getElementById('emptyState');
+
+const playView = document.getElementById('playView');
+const playPanel = document.getElementById('playPanel');
+const playTitle = document.getElementById('playTitle');
+const playFrame = document.getElementById('playFrame');
+const playFallback = document.getElementById('playFallback');
+const playLoader = document.getElementById('playLoader');
+const playLoaderBg = document.getElementById('playLoaderBg');
+const playLoaderTitle = document.getElementById('playLoaderTitle');
+const backBtn = document.getElementById('backBtn');
+const fsBtn = document.getElementById('fsBtn');
+
+let activeTag = 'all';
+let loadStart = 0;
+let favorites = loadFavorites();
+
+function nowMs() {
+  return Date.now();
+}
+
+function getUnlockUntil() {
+  const raw = localStorage.getItem(LOCK_KEY);
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function setUnlockedFor12Hours() {
+  localStorage.setItem(LOCK_KEY, String(nowMs() + 12 * 60 * 60 * 1000));
+}
+
+function isUnlocked() {
+  return nowMs() < getUnlockUntil();
+}
+
+function showSite() {
+  gate.style.display = 'none';
+  site.classList.add('show');
+  navWrap.classList.remove('hidden');
+  navWrap.setAttribute('aria-hidden', 'false');
+}
+
+function hideSite() {
+  gate.style.display = 'flex';
+  site.classList.remove('show');
+  navWrap.classList.add('hidden');
+  navWrap.setAttribute('aria-hidden', 'true');
+}
+
+async function sha256b64(str) {
   const buf = new TextEncoder().encode(str);
   const h = await crypto.subtle.digest('SHA-256', buf);
   return btoa(String.fromCharCode(...new Uint8Array(h)));
 }
-async function tryUnlock(){
-  pw.classList.remove('bad','good');
+
+async function tryUnlock() {
+  pw.classList.remove('bad', 'good');
   const val = pw.value || '';
   const h = await sha256b64(val);
-  if(h === HASH){
+
+  if (h === HASH) {
     pw.classList.add('good');
-    setTimeout(()=>{
-      gate.style.display='none';
-      site.classList.add('show');
-      navWrap.classList.remove('hidden');
-      navWrap.setAttribute('aria-hidden','false');
-    },1000);
-  }else{
+    setUnlockedFor12Hours();
+    setTimeout(() => {
+      showSite();
+    }, 500);
+  } else {
     pw.classList.add('bad');
-    pw.value='';
-    setTimeout(()=>pw.classList.remove('bad'),1000);
+    pw.value = '';
+    setTimeout(() => pw.classList.remove('bad'), 1000);
   }
 }
-pw.addEventListener('keydown', e => { if(e.key==='Enter') tryUnlock(); });
+
+function loadFavorites() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveFavorites() {
+  localStorage.setItem(FAV_KEY, JSON.stringify([...favorites]));
+}
+
+function gameIsFav(game) {
+  return favorites.has(game.src);
+}
+
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '')
+    .replace(/^_|_$/g, '');
+}
+
+function resolveGameSrc(title) {
+  const found = GAME_DATA.find(g => g.title === title);
+  return found ? found.src : `games/${slugify(title)}/index.html`;
+}
+
+function getFilteredGames() {
+  if (activeTag === 'all') return GAME_DATA.slice();
+  if (activeTag === 'favorites') return GAME_DATA.filter(game => gameIsFav(game));
+  return GAME_DATA.filter(game => game.category === activeTag);
+}
+
+function renderTags() {
+  gamesTags.innerHTML = '';
+  TAGS.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = `tag-btn${activeTag === tag.id ? ' active' : ''}`;
+    btn.type = 'button';
+    btn.textContent = tag.label;
+    btn.addEventListener('click', () => {
+      if (activeTag === tag.id) return;
+      activeTag = tag.id;
+      renderTags();
+      animateRenderGames();
+    });
+    gamesTags.appendChild(btn);
+  });
+}
+
+function animateRenderGames() {
+  gameGrid.classList.add('swap-out');
+  emptyState.classList.remove('show');
+  setTimeout(() => {
+    renderGames();
+    requestAnimationFrame(() => {
+      gameGrid.classList.remove('swap-out');
+    });
+  }, 170);
+}
+
+function renderGames() {
+  const list = getFilteredGames();
+  gameGrid.innerHTML = '';
+
+  if (!list.length) {
+    emptyState.textContent = activeTag === 'favorites'
+      ? 'No favorites yet. Tap the star on any game to save it here.'
+      : 'Nothing here yet.';
+    emptyState.classList.add('show');
+    return;
+  }
+
+  emptyState.classList.remove('show');
+
+  list.forEach((game, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card' + (gameIsFav(game) ? ' favorited' : '');
+    card.tabIndex = 0;
+    card.style.setProperty('--i', idx);
+
+    const bg = document.createElement('div');
+    bg.className = 'card-bg';
+    bg.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)), url('${game.image}')`;
+
+    const fav = document.createElement('button');
+    fav.className = 'fav-btn';
+    fav.type = 'button';
+    fav.setAttribute('aria-label', gameIsFav(game) ? `Remove ${game.title} from favorites` : `Add ${game.title} to favorites`);
+    fav.innerHTML = `<span class="material-icons">${gameIsFav(game) ? 'star' : 'star_border'}</span>`;
+    fav.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFavorite(game);
+    });
+
+    const overlay = document.createElement('div');
+    overlay.className = 'card-overlay';
+
+    const text = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'card-title';
+    title.textContent = game.title;
+    text.appendChild(title);
+    overlay.appendChild(text);
+
+    card.appendChild(bg);
+    card.appendChild(fav);
+    card.appendChild(overlay);
+
+    card.addEventListener('click', () => openPlay(game));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openPlay(game);
+      }
+    });
+
+    gameGrid.appendChild(card);
+  });
+}
+
+function toggleFavorite(game) {
+  if (favorites.has(game.src)) favorites.delete(game.src);
+  else favorites.add(game.src);
+  saveFavorites();
+  renderTags();
+  renderGames();
+}
+
+function openPlay(game){
+  loadStart = Date.now();
+  playTitle.textContent = game.title;
+  playLoaderTitle.textContent = game.title;
+  playLoaderBg.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)), url('${game.image}')`;
+  playLoader.classList.add('show');
+  playFallback.classList.add('show');
+
+  playFrame.src = game.src;
+  playView.classList.add('show');
+  playView.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('play-mode');
+  navWrap.classList.add('hidden');
+  navWrap.setAttribute('aria-hidden', 'true');
+}
+
+function closePlay(){
+  playView.classList.remove('show');
+  playView.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('play-mode');
+  playLoader.classList.remove('show');
+  playFallback.classList.remove('show');
+  setTimeout(() => {
+    playFrame.src = 'about:blank';
+  }, 220);
+  if (site.classList.contains('show')) navWrap.classList.remove('hidden');
+}
+
+async function toggleFullscreen(){
+  try{
+    if(!document.fullscreenElement){
+      await playFrame.requestFullscreen();
+    }else{
+      await document.exitFullscreen();
+    }
+  }catch(e){}
+}
+
+playFrame.addEventListener('load', () => {
+  const elapsed = Date.now() - loadStart;
+  const remaining = Math.max(0, 4000 - elapsed);
+  setTimeout(() => {
+    playLoader.classList.remove('show');
+    playFallback.classList.remove('show');
+  }, remaining);
+});
+
+document.addEventListener('fullscreenchange', () => {
+  const on = document.fullscreenElement === playPanel;
+  playPanel.classList.toggle('is-fullscreen', on);
+});
+
+if (isUnlocked()) {
+  showSite();
+} else {
+  hideSite();
+}
+
+renderTags();
+renderGames();
+
+pw.addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryUnlock();
+});
 pw.focus();
+
+backBtn.addEventListener('click', closePlay);
+fsBtn.addEventListener('click', toggleFullscreen);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && playView.classList.contains('show')) closePlay();
+});
+
 (function(){
   let lastY = window.scrollY || 0;
   let raf = false;
@@ -350,7 +945,10 @@ pw.focus();
     raf = false;
   }
   window.addEventListener('scroll', ()=>{
-    if(!raf){ raf = true; requestAnimationFrame(tick); }
+    if(!raf){
+      raf = true;
+      requestAnimationFrame(tick);
+    }
   }, {passive:true});
 })();
 </script>
