@@ -10,38 +10,39 @@
     <script type="text/javascript" src="https://3kh0.github.io/js/main.js"></script>
     <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
   </head>
+
   <style>
     body {
-      overflow-y: hidden;
-      overflow-x: hidden;
-      margin: 0px;
-      padding: 0px;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
   </style>
+
   <body>
     <div id="turn"></div>
     <div id="gameContainer"></div>
 
     <script>
-  window.open = function (url, target, features) {
-    if (url) {
-      window.location.href = url;
-    }
-    return null;
-  };
+      window.open = function (url) {
+        if (url) {
+          window.location.href = url;
+        }
+        return null;
+      };
 
-  document.addEventListener("click", function (e) {
-    const a = e.target.closest("a[target='_blank']");
-    if (!a) return;
-    e.preventDefault();
-    window.location.href = a.href;
-  });
+      var gameName = "grindcraft.min.js";
 
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("a[target='_blank']").forEach(a => {
-      a.removeAttribute("target");
-    });
-  });
-</script>
+      function addScript(src, buster, callback) {
+        var s = document.createElement("script");
+        s.src = src + "?v=" + buster;
+        s.onload = callback;
+        document.body.appendChild(s);
+      }
+
+      addScript("version.js", Date.now(), function () {
+        addScript(gameName, version, function () {});
+      });
+    </script>
   </body>
 </html>
