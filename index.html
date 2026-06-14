@@ -20,6 +20,7 @@
   --nav-max:1100px;
   --card-h:160px;
   --card-radius:12px;
+  --playbar-h:40px;
 }
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 html,body{
@@ -142,17 +143,15 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   white-space:nowrap;
   user-select:none;
   opacity:.82;
-  border-bottom:1px solid transparent;
   transition:transform .18s ease, color .18s ease, opacity .18s ease;
 }
 .tag-btn:hover{
-  color:#fff;
+  color:#d2d2d2;
   opacity:1;
 }
 .tag-btn.active{
-  color:#fff;
+  color:#d2d2d2;
   opacity:1;
-  border-bottom-color:transparent;
 }
 .tag-btn:focus-visible{
   outline:none;
@@ -204,7 +203,7 @@ main{max-width:1200px;margin:0 auto;padding:12px}
 .card:hover,.card:focus-visible{
   transform:translateY(-6px);
   box-shadow:0 22px 64px rgba(0,0,0,0.65);
-  border-color:rgba(255,255,255,0.07);
+  border-color:rgba(255,255,255,0.08);
 }
 .card.favorited{
   border-color:rgba(255,255,255,0.10);
@@ -217,8 +216,8 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   filter:contrast(.98) saturate(.95);
 }
 .card-overlay{
-  position:absolute;left:0;right:0;bottom:0;height:10px;padding:12px 14px;
-  background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.75) 100%);
+  position:absolute;left:0;right:0;bottom:0;height:72px;padding:12px 14px;
+  background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.15) 70%);
   display:flex;align-items:flex-end;
 }
 .card-title{margin:0;font-weight:700;font-size:15px;color:var(--text);user-select:none;}
@@ -245,6 +244,7 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   opacity:1;
 }
 .fav-btn:hover{
+  transform:scale(1.06);
   background:rgba(255,255,255,0.10);
   color:#fff;
   box-shadow:0 8px 18px rgba(0,0,0,0.25);
@@ -305,13 +305,9 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   border-radius:0 !important;
   transform:none !important;
 }
-.play-panel:fullscreen .play-top,
-.play-panel.is-fullscreen .play-top{
-  border-bottom-color:rgba(255,255,255,0.05);
-}
 .play-panel:fullscreen .play-stage,
 .play-panel.is-fullscreen .play-stage{
-  padding:0;
+  padding-top:0;
 }
 .play-panel:fullscreen .play-frame-shell,
 .play-panel.is-fullscreen .play-frame-shell,
@@ -320,19 +316,50 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   border-radius:0;
 }
 
+.play-top-zone{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:var(--playbar-h);
+  z-index:6;
+  pointer-events:none;
+}
+.play-top-zone.active{
+  pointer-events:auto;
+}
+
 .play-top{
-  position:relative;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:var(--playbar-h);
   z-index:80;
-  height:28px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
   padding:0 10px;
-  border-bottom:1px solid rgba(255,255,255,0.04);
-  background:rgba(5,5,5,0.96);
+  background:rgba(8,8,10,0.88);
   color:var(--text);
-  flex:0 0 auto;
+  backdrop-filter:blur(18px) saturate(130%);
+  -webkit-backdrop-filter:blur(18px) saturate(130%);
+  box-shadow:0 8px 30px rgba(0,0,0,0.18);
+  pointer-events:none;
+  opacity:1;
+  transform:translateY(0);
+  transition:transform .28s cubic-bezier(.2,.9,.2,1), opacity .28s ease;
+}
+
+.play-top.hidden{
+  transform:translateY(calc(-100% - 4px));
+  opacity:0;
+}
+
+.play-top.visible{
+  transform:translateY(0);
+  opacity:1;
 }
 .play-left{
   display:flex;
@@ -341,10 +368,10 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   min-width:0;
 }
 .back-btn,.fs-btn{
-  width:24px;
-  height:24px;
+  width:30px;
+  height:30px;
   border:0;
-  border-radius:8px;
+  border-radius:6px;
   background:transparent;
   color:var(--text);
   cursor:pointer;
@@ -352,7 +379,9 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   place-items:center;
   transition:background .16s ease, opacity .16s ease;
   flex:0 0 auto;
-  opacity:.9;
+  opacity:.92;
+  pointer-events:auto;
+  z-index: 666;
 }
 .back-btn:hover,.fs-btn:hover{
   background:rgba(255,255,255,0.08);
@@ -360,7 +389,7 @@ main{max-width:1200px;margin:0 auto;padding:12px}
 }
 .back-btn .material-icons,
 .fs-btn .material-icons{
-  font-size:16px;
+  font-size:20px;
   line-height:1;
 }
 .play-title-wrap{min-width:0}
@@ -373,8 +402,8 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   margin-bottom:0;
 }
 .play-title{
-  font-size:10px;
-  font-weight:700;
+  font-size:16px;
+  font-weight:600;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -390,8 +419,9 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   position:relative;
   flex:1;
   min-height:0;
-  padding:0;
+  padding-top:0;
 }
+
 .play-frame-shell{
   position:absolute;
   inset:0;
@@ -507,7 +537,7 @@ main{max-width:1200px;margin:0 auto;padding:12px}
 }
 
 @media (max-width:640px){
-  :root{--nav-h:64px;--card-h:180px}
+  :root{--nav-h:64px;--card-h:180px;--playbar-h:22px}
   .nav-wrap{top:10px;padding:8px}
   .nav-right .nav-btn{padding:7px 10px}
   .section{margin:24px 6px}
@@ -518,15 +548,17 @@ main{max-width:1200px;margin:0 auto;padding:12px}
     height:100vh;
     border-radius:0;
   }
-  .play-top{height:26px;padding:0 8px}
+  .play-top{
+    padding:0 8px;
+  }
   .play-title{max-width:54vw;font-size:11px}
-  .back-btn,.fs-btn{width:22px;height:22px}
+  .back-btn,.fs-btn{width:18px;height:18px}
   .back-btn .material-icons,
-  .fs-btn .material-icons{font-size:15px}
+  .fs-btn .material-icons{font-size:13px}
 }
 
 .top-bg {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -537,6 +569,15 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   z-index: -1;
   pointer-events: none;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 </style>
 </head>
 <body>
@@ -546,7 +587,9 @@ main{max-width:1200px;margin:0 auto;padding:12px}
     <input id="pw" type="password" placeholder="enter password" autocomplete="current-password" />
   </div>
 </div>
+
 <div class="top-bg"></div>
+
 <div class="nav-wrap hidden" id="navWrap" aria-hidden="true">
   <div class="nav-bg" aria-hidden="true"></div>
   <div class="nav" role="navigation" aria-label="Main">
@@ -563,7 +606,8 @@ main{max-width:1200px;margin:0 auto;padding:12px}
 
 <div class="play-view" id="playView" aria-hidden="true">
   <div class="play-panel" id="playPanel" role="dialog" aria-modal="true" aria-label="Game player">
-    <div class="play-top">
+    <div class="play-top-zone" id="playTopZone" aria-hidden="true"></div>
+    <div class="play-top" id="playTop">
       <div class="play-left">
         <button class="back-btn" id="backBtn" aria-label="Back to games">
           <span class="material-icons">arrow_back</span>
@@ -584,8 +628,7 @@ main{max-width:1200px;margin:0 auto;padding:12px}
       <div class="play-frame-shell" id="playShell">
         <iframe class="play-frame" id="playFrame" allowfullscreen></iframe>
         <div class="play-fallback" id="playFallback">
-          <div>
-          </div>
+          <div></div>
         </div>
 
         <div class="play-loader" id="playLoader" aria-hidden="true">
@@ -613,37 +656,14 @@ main{max-width:1200px;margin:0 auto;padding:12px}
   </main>
 </div>
 
+<script src="gamesource.js"></script>
 <script>
 const HASH = '0vjSJT4Lt0ln7jh24tvzkdX9FwsnBXP7PZLlJzhievA=';
 const LOCK_KEY = 'ano5_unlock_until';
 const FAV_KEY = 'ano5_favorites';
 
-const GAME_DATA = [
-  { title:'Crazy Cattle 3D', image:'img/games/crazycattle3d.png', category:'action', src:'games/crazycattle3d/index.html' },
-  { title:'Slope', image:'img/games/slope.png', category:'racing', src:'games/slope/index.html' },
-  { title:'Retro Highway', image:'img/games/retrohighway.png', category:'racing', src:'games/retrohighway/index.html' },
-  { title:'Super Star Car', image:'img/games/superstarcar.png', category:'racing', src:'games/superstarcar/index.html' },
-  { title:'Block Blast', image:'img/games/blockblast.png', category:'puzzle', src:'games/blockblast/index.html' },
-  { title:'Drift Hunters', image:'img/games/drifthunters.png', category:'racing', src:'games/drifthunters/index.html' },
-  { title:'Snow Rider 3D', image:'img/games/snowrider3d.png', category:'racing', src:'games/snowrider3d/index.html' },
-  { title:'Cookie Clicker', image:'img/games/cookieclicker.png', category:'idle', src:'games/cookieclicker/index.html' },
-  { title:'Retrobowl', image:'img/games/retrobowl.png', category:'sports', src:'games/retrobowl/index.html' },
-  { title:'Monkey Mart', image:'img/games/monkeymart.png', category:'idle', src:'games/monkeymart/index.html' },
-  { title:'Super Mario 64', image:'img/games/supermario64.png', category:'adventure', src:'games/supermario64/index.html' },
-  { title:'Eaglercraft 1.5.2', image:'img/games/eaglercraft.png', category:'sandbox', src:'games/eaglercraft/index.html' }
-];
-
-const TAGS = [
-  { id:'favorites', label:'Favorites' },
-  { id:'all', label:'All' },
-  { id:'racing', label:'Racing' },
-  { id:'action', label:'Action' },
-  { id:'puzzle', label:'Puzzle' },
-  { id:'idle', label:'Idle' },
-  { id:'sports', label:'Sports' },
-  { id:'sandbox', label:'Sandbox' },
-  { id:'adventure', label:'Adventure' }
-];
+const GAME_DATA = window.GAME_DATA || [];
+const TAGS = window.TAGS || [];
 
 const pw = document.getElementById('pw');
 const gate = document.getElementById('gate');
@@ -655,6 +675,8 @@ const emptyState = document.getElementById('emptyState');
 
 const playView = document.getElementById('playView');
 const playPanel = document.getElementById('playPanel');
+const playTop = document.getElementById('playTop');
+const playTopZone = document.getElementById('playTopZone');
 const playTitle = document.getElementById('playTitle');
 const playFrame = document.getElementById('playFrame');
 const playFallback = document.getElementById('playFallback');
@@ -667,6 +689,19 @@ const fsBtn = document.getElementById('fsBtn');
 let activeTag = 'all';
 let loadStart = 0;
 let favorites = loadFavorites();
+
+let playBarDeadline = 0;
+let playBarHideTimer = null;
+let playBarHoverTimer = null;
+let gameVisible = false;
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+window.addEventListener('pageshow', () => {
+  window.scrollTo(0, 0);
+});
 
 function nowMs() {
   return Date.now();
@@ -691,6 +726,7 @@ function showSite() {
   site.classList.add('show');
   navWrap.classList.remove('hidden');
   navWrap.setAttribute('aria-hidden', 'false');
+  window.scrollTo(0, 0);
 }
 
 function hideSite() {
@@ -755,10 +791,16 @@ function resolveGameSrc(title) {
   return found ? found.src : `games/${slugify(title)}/index.html`;
 }
 
+function getGameTags(game) {
+  if (Array.isArray(game.tags) && game.tags.length) return game.tags;
+  if (typeof game.category === 'string' && game.category.trim()) return [game.category.trim()];
+  return [];
+}
+
 function getFilteredGames() {
   if (activeTag === 'all') return GAME_DATA.slice();
   if (activeTag === 'favorites') return GAME_DATA.filter(game => gameIsFav(game));
-  return GAME_DATA.filter(game => game.category === activeTag);
+  return GAME_DATA.filter(game => getGameTags(game).includes(activeTag));
 }
 
 function renderTags() {
@@ -857,15 +899,80 @@ function toggleFavorite(game) {
   renderGames();
 }
 
+function clearPlayBarTimers() {
+  if (playBarHideTimer) {
+    clearTimeout(playBarHideTimer);
+    playBarHideTimer = null;
+  }
+  if (playBarHoverTimer) {
+    clearTimeout(playBarHoverTimer);
+    playBarHoverTimer = null;
+  }
+}
+
+function hidePlayBar() {
+  playTop.classList.add('hidden');
+  playTop.classList.remove('visible');
+}
+
+function showPlayBar() {
+  playTop.classList.remove('hidden');
+  playTop.classList.add('visible');
+}
+
+function schedulePlayBarHide(whenMs) {
+  clearPlayBarTimers();
+  const delay = Math.max(0, whenMs - nowMs());
+  playBarHideTimer = setTimeout(() => {
+    if (!gameVisible) return;
+    hidePlayBar();
+  }, delay);
+}
+
+function activatePlayBarZone() {
+  playTopZone.classList.add('active');
+}
+
+function deactivatePlayBarZone() {
+  playTopZone.classList.remove('active');
+}
+
+function onGameVisible() {
+  gameVisible = true;
+  activatePlayBarZone();
+
+  if (nowMs() < playBarDeadline) {
+    showPlayBar();
+    schedulePlayBarHide(playBarDeadline);
+  } else {
+    hidePlayBar();
+  }
+}
+
+function onGameLoading() {
+  gameVisible = false;
+  deactivatePlayBarZone();
+  clearPlayBarTimers();
+  hidePlayBar();
+}
+
 function openPlay(game){
   loadStart = Date.now();
+  playBarDeadline = Date.now() + 8000;
+  onGameLoading();
+
   playTitle.textContent = game.title;
   playLoaderTitle.textContent = game.title;
   playLoaderBg.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.85)), url('${game.image}')`;
   playLoader.classList.add('show');
   playFallback.classList.add('show');
 
-  playFrame.src = game.src;
+  playFrame.src = 'about:blank';
+
+  setTimeout(() => {
+    playFrame.src = game.src;
+  }, 1000);
+
   playView.classList.add('show');
   playView.setAttribute('aria-hidden', 'false');
   document.body.classList.add('play-mode');
@@ -874,6 +981,7 @@ function openPlay(game){
 }
 
 function closePlay(){
+  onGameLoading();
   playView.classList.remove('show');
   playView.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('play-mode');
@@ -901,11 +1009,43 @@ playFrame.addEventListener('load', () => {
   setTimeout(() => {
     playLoader.classList.remove('show');
     playFallback.classList.remove('show');
+    onGameVisible();
   }, remaining);
 });
 
+playTopZone.addEventListener('mouseenter', () => {
+  if (!gameVisible) return;
+  clearTimeout(playBarHoverTimer);
+  playBarHoverTimer = setTimeout(() => {
+    if (!gameVisible) return;
+    showPlayBar();
+    if (nowMs() >= playBarDeadline) {
+      clearPlayBarTimers();
+      playBarHideTimer = setTimeout(() => {
+        if (gameVisible) hidePlayBar();
+      }, 1800);
+    } else {
+      schedulePlayBarHide(playBarDeadline);
+    }
+  }, 400);
+});
+
+playTopZone.addEventListener('mouseleave', () => {
+  clearTimeout(playBarHoverTimer);
+  playBarHoverTimer = null;
+
+  if (!gameVisible) return;
+
+  if (nowMs() >= playBarDeadline) {
+    clearTimeout(playBarHideTimer);
+    playBarHideTimer = setTimeout(() => {
+      if (gameVisible) hidePlayBar();
+    }, 2000);
+  }
+});
+
 document.addEventListener('fullscreenchange', () => {
-  const on = document.fullscreenElement === playPanel;
+  const on = document.fullscreenElement === playFrame;
   playPanel.classList.toggle('is-fullscreen', on);
 });
 
@@ -952,10 +1092,10 @@ document.addEventListener('keydown', e => {
       requestAnimationFrame(tick);
     }
   }, {passive:true});
-  
+
   if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
+    navigator.serviceWorker.register('sw.js');
+  }
 })();
 </script>
 </body>
