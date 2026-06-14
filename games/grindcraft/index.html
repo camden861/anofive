@@ -23,39 +23,25 @@
     <div id="gameContainer"></div>
 
     <script>
-      window.open = function (url) {
-        window.location.href = url;
-        return null;
-      };
+  window.open = function (url, target, features) {
+    if (url) {
+      window.location.href = url;
+    }
+    return null;
+  };
 
-      document.addEventListener("click", function (e) {
-        let a = e.target.closest("a");
-        if (a && a.href) {
-          e.preventDefault();
-          window.location.href = a.href;
-        }
-      });
+  document.addEventListener("click", function (e) {
+    const a = e.target.closest("a[target='_blank']");
+    if (!a) return;
+    e.preventDefault();
+    window.location.href = a.href;
+  });
 
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll("a[target='_blank']").forEach(a => {
-          a.removeAttribute("target");
-        });
-      });
-
-      var gameName = "grindcraft.min.js";
-
-      function addScript(src, buster, callback) {
-        var s = document.createElement("script");
-        s.setAttribute("src", src + "?v=" + buster);
-        if (typeof callback === "function") {
-          s.onload = callback;
-        }
-        document.body.appendChild(s);
-      }
-
-      addScript("version.js", Date.now(), function () {
-        addScript(gameName, version, function () {});
-      });
-    </script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("a[target='_blank']").forEach(a => {
+      a.removeAttribute("target");
+    });
+  });
+</script>
   </body>
 </html>
