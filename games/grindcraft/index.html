@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+    <meta name="display-mode" content="standalone">
     <script type="text/javascript" src="https://3kh0.github.io/js/main.js"></script>
     <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
   </head>
@@ -20,10 +21,29 @@
   <body>
     <div id="turn"></div>
     <div id="gameContainer"></div>
-    <script type="text/javascript">
+
+    <script>
+      window.open = function (url) {
+        window.location.href = url;
+        return null;
+      };
+
+      document.addEventListener("click", function (e) {
+        let a = e.target.closest("a");
+        if (a && a.href) {
+          e.preventDefault();
+          window.location.href = a.href;
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("a[target='_blank']").forEach(a => {
+          a.removeAttribute("target");
+        });
+      });
+
       var gameName = "grindcraft.min.js";
 
-      //This all here is for cache busting;
       function addScript(src, buster, callback) {
         var s = document.createElement("script");
         s.setAttribute("src", src + "?v=" + buster);
@@ -33,7 +53,6 @@
         document.body.appendChild(s);
       }
 
-      // Google Analytics stuff
       addScript("version.js", Date.now(), function () {
         addScript(gameName, version, function () {});
       });
