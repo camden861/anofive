@@ -27,7 +27,7 @@ window.GAME_DATA = [
   { title:'Duck Life 1', image:'img/games/ducklife1.png', tags:['adventure'], src:'games/ducklife1/index.html' },
   { title:'Duck Life 2', image:'img/games/ducklife2.png', tags:['adventure'], src:'games/ducklife2/index.html' },
   { title:'Duck Life 3', image:'img/games/ducklife3.png', tags:['adventure'], src:'games/ducklife3/index.html' },
-  { title:'Idle Breakout', image:'img/games/idlebreakout.png', tags:['idle','clicker'], src:'games/ducklife3/index.html' },
+  { title:'Idle Breakout', image:'img/games/idlebreakout.png', tags:['idle','clicker'], src:'games/idlebreakout/index.html' },
   { title:'Drive Mad', image:'img/games/drivemad.png', tags:['racing','adventure'], src:'games/drivemad/index.html' },
   { title:'Monster Tracks', image:'img/games/monstertracks.png', tags:['adventure'], src:'games/monstertracks/index.html' },
   { title:'Doodle Cricket', image:'img/games/doodlecricket.png', tags:['sports'], src:'games/doodlecricket/index.html' },
