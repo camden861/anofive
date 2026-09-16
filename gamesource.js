@@ -109,7 +109,7 @@ window.GAME_DATA = [
   { title:'Tunnel Rush', image:'img/games/tunnelrush.png', tags:['runner','racing','action'], src:'games/tunnel-rush/index.html' },
   { title:'Tunnel Rush 2', image:'img/games/tunnelrush2.png', tags:['runner','racing','action'], src:'games/tunnel-rush-2/index.html' },
   { title:'Uno 4 Colors', image:'img/games/uno4colors.png', tags:['puzzle','sports'], src:'games/uno-4-colors/index.html' },
-  { title:'Wordle Plus', image:'img/games/wordleplus.png', tags:['puzzle'], src:'games/worlde-plus/index.html' },
+  { title:'Wordle Plus', image:'img/games/wordleplus.png', tags:['puzzle'], src:'games/wordle-plus/index.html' },
   { title:'Zombie Derby Pixel Survival', image:'img/games/zdps.png', tags:['racing','action','shooting'], src:'games/zombie-pixel-derby-survival/index.html' }
 ];
 
